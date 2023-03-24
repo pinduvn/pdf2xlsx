@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
-import { Button, Container, Card, Row } from 'react-bootstrap'
+//import { Button, Container, Card, Row } from 'react-bootstrap'
 
 class App extends Component {
    
@@ -39,7 +39,22 @@ class App extends Component {
    
     // Request made to the backend api
     // Send formData object
-    axios.post('https://convertidorlista.azurewebsites.net/api/httpexample', formData);
+    axios.post('https://convertidorlista.azurewebsites.net/api/httpexample', formData,{ responseType: 'blob' }).then((response) => {
+      // create file link in browser's memory
+      const href = window.URL.createObjectURL(new Blob([response.data]));
+  
+      // create "a" HTML element with href to file & click
+      const link = document.createElement('a');
+      link.href = href;
+      link.setAttribute('download', 'lista.xlsx'); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+  
+      // clean up "a" element & remove ObjectURL
+      document.body.removeChild(link);
+      URL.revokeObjectURL(href);
+    });
+
   };
    
   // File content to be displayed after
