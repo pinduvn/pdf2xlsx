@@ -91,7 +91,7 @@ class App extends Component {
    
     return (
       
-      <div className="container">
+      <div className="container bg-secondary">
           <h1>
             Convertidor de listas
           </h1>
@@ -103,7 +103,7 @@ class App extends Component {
               <input className="form-control" type="file" id="formFile" onChange={this.onFileChange} ></input>
             </div>
             <div className="col-auto">
-              <button className="btn btn-outline-secondary" type="button" onClick={this.onFileUpload} >Convertir</button>
+              <button className="btn btn-warning" type="button" onClick={this.onFileUpload}>Convertir</button>
             </div>
           </div>
         {this.fileData()}
