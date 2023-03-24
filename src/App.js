@@ -6,94 +6,92 @@ import axios from 'axios';
 import { Button, Container, Card, Row } from 'react-bootstrap'
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-      this.state = {
-        setBookName: '',
-        setReview: '',
-        fetchData: [],
-        reviewUpdate: ''
-      }
-  }
+   
+  state = {
 
-  handleChange = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value
-    this.setState({
-      [nam]: val
-    })
-  }
-
-  handleChange2 = (event) => {
-    this.setState({
-      reviewUpdate: event.target.value
-    })
-  }
-
-  componentDidMount() {
-    axios.get("/api/get")
-      .then((response) => {
-        this.setState({
-          fetchData: response.data
-        })
-      })
-  }
-
-  submit = () => {
-    axios.post('/api/insert', this.state)
-      .then(() => { alert('success post') })
-    console.log(this.state)
-    document.location.reload();
-  }
-
-  delete = (id) => {
-    if (confirm("Do you want to delete? ")) {
-      axios.delete(`/api/delete/${id}`)
-      document.location.reload()
-    }
-  }
-
-  edit = (id) => {
-    axios.put(`/api/update/${id}`, this.state)
-    document.location.reload();
-  }
-  render() {
-
-    let card = this.state.fetchData.map((val, key) => {
+    // Initially, no file is selected
+    selectedFile: null
+  };
+   
+  // On file select (from the pop up)
+  onFileChange = event => {
+   
+    // Update the state
+    this.setState({ selectedFile: event.target.files[0] });
+   
+  };
+   
+  // On file upload (click the upload button)
+  onFileUpload = () => {
+   
+    // Create an object of formData
+    const formData = new FormData();
+   
+    // Update the formData object
+    formData.append(
+      "files",
+      this.state.selectedFile,
+      this.state.selectedFile.name
+    );
+   
+    // Details of the uploaded file
+    console.log(this.state.selectedFile);
+   
+    // Request made to the backend api
+    // Send formData object
+    axios.post('https://convertidorlista.azurewebsites.net/api/httpexample', formData);
+  };
+   
+  // File content to be displayed after
+  // file upload is complete
+  fileData = () => {
+   
+    if (this.state.selectedFile) {
+        
       return (
-        <React.Fragment>
-          <Card style={{ width: '18rem' }} className='m-2'>
-            <Card.Body>
-              <Card.Title>{val.book_name}</Card.Title>
-              <Card.Text>
-                {val.book_review}
-              </Card.Text>
-              <input name='reviewUpdate' onChange={this.handleChange2} placeholder='Update Review' ></input>
-              <Button className='m-2' onClick={() => { this.edit(val.id) }}>Update</Button>
-              <Button onClick={() => { this.delete(val.id) }}>Delete</Button>
-            </Card.Body>
-          </Card>
-        </React.Fragment>
-      )
-    })
+        <div>
+          <h2>File Details:</h2>
+          <p>File Name: {this.state.selectedFile.name}</p>
 
-    return (
-      <div className='App'>
-        <h1>Dockerized Fullstack React Application</h1>
-        <div className='form'>
-          <input name='setBookName' placeholder='Enter Book Name' onChange={this.handleChange} />
-          <input name='setReview' placeholder='Enter Review' onChange={this.handleChange} />
+          <p>File Type: {this.state.selectedFile.type}</p>
+
+          <p>
+            Last Modified:{" "}
+            {this.state.selectedFile.lastModifiedDate.toDateString()}
+          </p>
+
         </div>
-
-        <Button className='my-2' variant="primary" onClick={this.submit}>Submit</Button> <br /><br/>
-
-        <Container>
-          <Row>
-            {card}
-          </Row>
-        </Container>
+      );
+    } else {
+      return (
+        <div>
+          <br />
+          <h4>Choose before Pressing the Upload button</h4>
+        </div>
+      );
+    }
+  };
+   
+  render() {
+   
+    return (
+      <div>
+          <h1>
+            GeeksforGeeks
+          </h1>
+          <h3>
+            File Upload using React!
+          </h3>
+          <div>
+              <input type="file" onChange={this.onFileChange} />
+              <button onClick={this.onFileUpload}>
+                Upload!
+              </button>
+          </div>
+        {this.fileData()}
       </div>
     );
   }
 }
+
 export default App;
