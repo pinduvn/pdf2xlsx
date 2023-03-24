@@ -81,7 +81,7 @@ class App extends Component {
       return (
         <div>
           <br />
-          <h4>Choose before Pressing the Upload button</h4>
+          <h4>Seleccione un archivo y precione Convertir</h4>
         </div>
       );
     }
@@ -90,18 +90,21 @@ class App extends Component {
   render() {
    
     return (
-      <div>
+      
+      <div className="container">
           <h1>
-            GeeksforGeeks
+            Convertidor de listas
           </h1>
           <h3>
-            File Upload using React!
+            Escoja la lista a modificar
           </h3>
-          <div>
-              <input type="file" onChange={this.onFileChange} />
-              <button onClick={this.onFileUpload}>
-                Upload!
-              </button>
+          <div className="row">
+            <div className="col-auto">
+              <input className="form-control" type="file" id="formFile" onChange={this.onFileChange} ></input>
+            </div>
+            <div className="col-auto">
+              <button className="btn btn-outline-secondary" type="button" onClick={this.onFileUpload} >Convertir</button>
+            </div>
           </div>
         {this.fileData()}
       </div>
